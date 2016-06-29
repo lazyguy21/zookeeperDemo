@@ -11,8 +11,9 @@ import java.util.List;
  */
 public class HelloZookeeper {
     public static void main(String[] args) throws IOException {
-        String host = "10.8.12.128:32770";
+//        String host = "10.8.12.128:32770";
 //        String host = "10.18.19.18:12181";
+        String host = "localhost:2181";
         String zPath = "/";
 
         ZooKeeper zk = new ZooKeeper(host, 15000, null);
