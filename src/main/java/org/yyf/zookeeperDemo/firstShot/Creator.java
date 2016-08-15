@@ -53,6 +53,6 @@ public class Creator implements Watcher{
         Creator creator = new Creator();
         creator.start();
 //        creator.create("/firstShot","something".getBytes());
-        creator.setData("/firstShot","firstSet3".getBytes());
+        creator.setData("/firstShot","firstSet5".getBytes());
     }
 }
