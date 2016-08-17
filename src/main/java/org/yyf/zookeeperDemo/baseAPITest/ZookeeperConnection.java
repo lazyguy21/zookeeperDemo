@@ -15,10 +15,13 @@ public class ZookeeperConnection implements Watcher {
 
     public static void main(String[] args) {
         try {
-            ZooKeeper zooKeeper = new ZooKeeper("localhost:2181", 5000,new ZookeeperConnection());//这里会立即返回
+            //session的超时时间只能取ticktime的2到20倍，（ticktime默认为2000ms），大了或者小了，服务器取端点值。
+            ZooKeeper zooKeeper = new ZooKeeper("localhost:2181", 50000,new ZookeeperConnection());//这里会立即返回
+            System.out.println(zooKeeper.getSessionTimeout());//还没连上，所以sessionTimeOut返回了0，为啥不返回null
             System.out.println(zooKeeper.getState());//这个时候zookeeper连接还处于Connecting状态
             countDownLatch.await();//等待连接好后的事件回调
             System.out.println(zooKeeper.getState());//此时zk的状态已经是connected了
+            System.out.println(zooKeeper.getSessionTimeout());//设置1000的时候，服务器默认取为4000了。
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
