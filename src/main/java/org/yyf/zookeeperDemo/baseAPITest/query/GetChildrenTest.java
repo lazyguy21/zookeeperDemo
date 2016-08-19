@@ -15,6 +15,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by tobi on 16-8-19.
+ * 注意getChildren watch的是子节点的添加或者删除，并不包括子节点的数据变化！！！
  */
 public class GetChildrenTest implements Watcher {
     private static CountDownLatch countDownLatch = new CountDownLatch(1);
