@@ -1,4 +1,4 @@
-package org.yyf.zookeeperDemo.baseAPITest;
+package org.yyf.zookeeperDemo.baseAPITest.initZK;
 
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -6,24 +6,26 @@ import org.apache.zookeeper.ZooKeeper;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tobi on 16-8-17.
  */
-public class ZookeeperConnection implements Watcher {
+public class ZookeeperConnectionSID_PWD implements Watcher {
     private static CountDownLatch countDownLatch = new CountDownLatch(1);
-
     public static void main(String[] args) {
         try {
-            //session的超时时间只能取ticktime的2到20倍，（ticktime默认为2000ms），大了或者小了，服务器取端点值。
-            ZooKeeper zooKeeper = new ZooKeeper("localhost:2181", 50000,new ZookeeperConnection());//这里会立即返回
-//            new ZooKeeper()
-            System.out.println(zooKeeper.getSessionTimeout());//还没连上，所以sessionTimeOut返回了0，为啥不返回null
-            System.out.println(zooKeeper.getState());//这个时候zookeeper连接还处于Connecting状态
-            System.out.println(Thread.currentThread().getName());
-            countDownLatch.await();//等待连接好后的事件回调
-            System.out.println(zooKeeper.getState());//此时zk的状态已经是connected了
-            System.out.println(zooKeeper.getSessionTimeout());//设置1000的时候，服务器默认取为4000了。
+            String connectString = "localhost:2181";
+            int sessionTimeout = 5000;
+            ZookeeperConnectionSID_PWD watcher = new ZookeeperConnectionSID_PWD();
+            ZooKeeper zooKeeper = new ZooKeeper(connectString, sessionTimeout, new ZookeeperConnectionSID_PWD());
+            countDownLatch.await();
+            //乱填的sid和pwd，server会返回event.state=expired
+//            ZooKeeper zooKeeper1 = new ZooKeeper(connectString, sessionTimeout, new ZookeeperConnectionSID_PWD(), 001230L, "fakePWD".getBytes());
+//            ZooKeeper.States state = zooKeeper1.getState();
+            new ZooKeeper(connectString, sessionTimeout, new ZookeeperConnectionSID_PWD(), zooKeeper.getSessionId(), zooKeeper.getSessionPasswd());
+            TimeUnit.SECONDS.sleep(Integer.MAX_VALUE);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -34,6 +36,7 @@ public class ZookeeperConnection implements Watcher {
     @Override
     public void process(WatchedEvent event) {
         Event.KeeperState state = event.getState();
+        System.out.println(event);
         switch (state) {
             case Unknown:
                 break;
@@ -42,8 +45,6 @@ public class ZookeeperConnection implements Watcher {
             case NoSyncConnected:
                 break;
             case SyncConnected:
-                System.out.println(Thread.currentThread().getName());
-                System.out.println(event);
                 countDownLatch.countDown();
                 break;
             case AuthFailed:

@@ -3,11 +3,14 @@ package org.yyf.zookeeperDemo;
 import org.apache.zookeeper.*;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tobi on 16-6-21.
  */
 public class DataWatcher implements Watcher, Runnable {
+
     private static final String hostPort = "localhost:2181";
     private static final String zooDataPath = "/MyConfig";
     byte zooData[] = null;

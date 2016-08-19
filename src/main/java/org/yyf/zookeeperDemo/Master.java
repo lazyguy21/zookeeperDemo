@@ -1,6 +1,11 @@
 package org.yyf.zookeeperDemo;
 
-import org.apache.zookeeper.*;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 
 import java.io.IOException;
 import java.util.Random;
@@ -24,6 +29,7 @@ public class Master implements Watcher {
         }
     }
 
+    @Override
     public void process(WatchedEvent e) {
         System.out.println(e);
     }
@@ -31,15 +37,18 @@ public class Master implements Watcher {
     void stopZK() throws Exception {
         zk.close();
     }
+
     String serverId = Integer.toHexString(new Random().nextInt());
+
     void runForMaster() throws KeeperException, InterruptedException {
         zk.create("/master",
                 serverId.getBytes(),
                 ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL);
     }
+
     public static void main(String args[]) throws Exception {
-        Master m = new Master("192.168.99.100:32773");
+        Master m = new Master("localhost:2181");
         m.startZK();
         // wait for a bit
         Thread.sleep(20000);

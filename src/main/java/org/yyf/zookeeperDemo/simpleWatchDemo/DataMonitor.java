@@ -1,16 +1,17 @@
 package org.yyf.zookeeperDemo.simpleWatchDemo; /**
- * A simple class that monitors the data and existence of a ZooKeeper
- * node. It uses asynchronous ZooKeeper APIs.
+ * A simple class that monitors the data and existence of a ZooKeeper node. It uses asynchronous
+ * ZooKeeper APIs.
  */
-import java.util.Arrays;
 
+import org.apache.zookeeper.AsyncCallback.StatCallback;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.AsyncCallback.StatCallback;
-import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.data.Stat;
+
+import java.util.Arrays;
 
 public class DataMonitor implements Watcher, StatCallback {
 
@@ -27,7 +28,7 @@ public class DataMonitor implements Watcher, StatCallback {
     byte prevData[];
 
     public DataMonitor(ZooKeeper zk, String znode, Watcher chainedWatcher,
-            DataMonitorListener listener) {
+                       DataMonitorListener listener) {
         this.zk = zk;
         this.znode = znode;
         this.chainedWatcher = chainedWatcher;
@@ -49,8 +50,7 @@ public class DataMonitor implements Watcher, StatCallback {
         /**
          * The ZooKeeper session is no longer valid.
          *
-         * @param rc
-         *                the ZooKeeper reason code
+         * @param rc the ZooKeeper reason code
          */
         void closing(int rc);
     }
@@ -61,17 +61,17 @@ public class DataMonitor implements Watcher, StatCallback {
             // We are are being told that the state of the
             // connection has changed
             switch (event.getState()) {
-            case SyncConnected:
-                // In this particular example we don't need to do anything
-                // here - watches are automatically re-registered with 
-                // server and any watches triggered while the client was 
-                // disconnected will be delivered (in order of course)
-                break;
-            case Expired:
-                // It's all over
-                dead = true;
-                listener.closing(KeeperException.Code.SessionExpired);
-                break;
+                case SyncConnected:
+                    // In this particular example we don't need to do anything
+                    // here - watches are automatically re-registered with
+                    // server and any watches triggered while the client was
+                    // disconnected will be delivered (in order of course)
+                    break;
+                case Expired:
+                    // It's all over
+                    dead = true;
+                    listener.closing(KeeperException.Code.SessionExpired);
+                    break;
             }
         } else {
             if (path != null && path.equals(znode)) {
@@ -86,22 +86,23 @@ public class DataMonitor implements Watcher, StatCallback {
 
     public void processResult(int rc, String path, Object ctx, Stat stat) {
         boolean exists;
-        switch (rc) {
-        case Code.Ok:
-            exists = true;
-            break;
-        case Code.NoNode:
-            exists = false;
-            break;
-        case Code.SessionExpired:
-        case Code.NoAuth:
-            dead = true;
-            listener.closing(rc);
-            return;
-        default:
-            // Retry errors
-            zk.exists(znode, true, this, null);
-            return;
+        Code code = Code.values()[rc];
+        switch (code) {
+            case OK:
+                exists = true;
+                break;
+            case NONODE:
+                exists = false;
+                break;
+            case SESSIONEXPIRED:
+            case NOAUTH:
+                dead = true;
+                listener.closing(rc);
+                return;
+            default:
+                // Retry errors
+                zk.exists(znode, true, this, null);
+                return;
         }
 
         byte b[] = null;

@@ -1,19 +1,19 @@
 package org.yyf.zookeeperDemo;
 
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.ZooDefs.Ids;
-import org.apache.zookeeper.data.Stat;
 
 public class SyncPrimitive implements Watcher {
 
@@ -23,7 +23,7 @@ public class SyncPrimitive implements Watcher {
     String root;
 
     SyncPrimitive(String address) {
-        if(zk == null){
+        if (zk == null) {
             try {
                 System.out.println("Starting ZK:");
                 zk = new ZooKeeper(address, 3000, this);
@@ -53,10 +53,6 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Barrier constructor
-         *
-         * @param address
-         * @param root
-         * @param size
          */
         Barrier(String address, String root, int size) {
             super(address);
@@ -79,7 +75,7 @@ public class SyncPrimitive implements Watcher {
 
             // My node name
             try {
-                name = new String(InetAddress.getLocalHost().getCanonicalHostName().toString());
+                name = new String(InetAddress.getLocalHost().getCanonicalHostName() + Math.random());
             } catch (UnknownHostException e) {
                 System.out.println(e.toString());
             }
@@ -88,13 +84,9 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Join barrier
-         *
-         * @return
-         * @throws KeeperException
-         * @throws InterruptedException
          */
 
-        boolean enter() throws KeeperException, InterruptedException{
+        boolean enter() throws KeeperException, InterruptedException {
             zk.create(root + "/" + name, new byte[0], Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
             while (true) {
                 synchronized (mutex) {
@@ -111,24 +103,20 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Wait until all reach barrier
-         *
-         * @return
-         * @throws KeeperException
-         * @throws InterruptedException
          */
 
-        boolean leave() throws KeeperException, InterruptedException{
+        boolean leave() throws KeeperException, InterruptedException {
             zk.delete(root + "/" + name, 0);
             while (true) {
                 synchronized (mutex) {
                     List<String> list = zk.getChildren(root, true);
-                        if (list.size() > 0) {
-                            mutex.wait();
-                        } else {
-                            return true;
-                        }
+                    if (list.size() > 0) {
+                        mutex.wait();
+                    } else {
+                        return true;
                     }
                 }
+            }
         }
     }
 
@@ -139,9 +127,6 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Constructor of producer-consumer queue
-         *
-         * @param address
-         * @param name
          */
         Queue(String address, String name) {
             super(address);
@@ -164,20 +149,16 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Add element to the queue.
-         *
-         * @param i
-         * @return
          */
 
-        boolean produce(int i) throws KeeperException, InterruptedException{
+        boolean produce(int i) throws KeeperException, InterruptedException {
             ByteBuffer b = ByteBuffer.allocate(4);
             byte[] value;
 
             // Add child with value i
             b.putInt(i);
             value = b.array();
-            zk.create(root + "/element", value, Ids.OPEN_ACL_UNSAFE,
-                        CreateMode.PERSISTENT_SEQUENTIAL);
+            zk.create(root + "/element", value, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
 
             return true;
         }
@@ -185,12 +166,8 @@ public class SyncPrimitive implements Watcher {
 
         /**
          * Remove first element from the queue.
-         *
-         * @return
-         * @throws KeeperException
-         * @throws InterruptedException
          */
-        int consume() throws KeeperException, InterruptedException{
+        int consume() throws KeeperException, InterruptedException {
             int retvalue = -1;
             Stat stat = null;
 
@@ -203,14 +180,14 @@ public class SyncPrimitive implements Watcher {
                         mutex.wait();
                     } else {
                         Integer min = new Integer(list.get(0).substring(7));
-                        for(String s : list){
+                        for (String s : list) {
                             Integer tempValue = new Integer(s.substring(7));
                             //System.out.println("Temporary value: " + tempValue);
-                            if(tempValue < min) min = tempValue;
+                            if (tempValue < min) min = tempValue;
                         }
                         System.out.println("Temporary value: " + root + "/element" + min);
                         byte[] b = zk.getData(root + "/element" + min,
-                                    false, stat);
+                                false, stat);
                         zk.delete(root + "/element" + min, 0);
                         ByteBuffer buffer = ByteBuffer.wrap(b);
                         retvalue = buffer.getInt();
@@ -223,10 +200,10 @@ public class SyncPrimitive implements Watcher {
     }
 
     public static void main(String args[]) {
-        if (args[0].equals("qTest"))
-            queueTest(args);
-        else
-            barrierTest(args);
+//        if (args[0].equals("qTest"))
+        queueTest(args);
+//        else
+//            barrierTest(args);
 
     }
 
@@ -240,23 +217,23 @@ public class SyncPrimitive implements Watcher {
         if (args[3].equals("p")) {
             System.out.println("Producer");
             for (i = 0; i < max; i++)
-                try{
+                try {
                     q.produce(10 + i);
-                } catch (KeeperException e){
+                } catch (KeeperException e) {
 
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
 
                 }
         } else {
             System.out.println("Consumer");
 
             for (i = 0; i < max; i++) {
-                try{
+                try {
                     int r = q.consume();
                     System.out.println("Item: " + r);
-                } catch (KeeperException e){
+                } catch (KeeperException e) {
                     i--;
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
 
                 }
             }
@@ -264,14 +241,15 @@ public class SyncPrimitive implements Watcher {
     }
 
     public static void barrierTest(String args[]) {
-        Barrier b = new Barrier(args[1], "/b1", new Integer(args[2]));
-        try{
+//        Barrier b = new Barrier(args[1], "/b1", new Integer(args[2]));
+        Barrier b = new Barrier("localhost:2181", "/b1", 2);
+        try {
             boolean flag = b.enter();
-            System.out.println("Entered barrier: " + args[2]);
-            if(!flag) System.out.println("Error when entering the barrier");
-        } catch (KeeperException e){
+            System.out.println("Entered barrier: " + 2);
+            if (!flag) System.out.println("Error when entering the barrier");
+        } catch (KeeperException e) {
 
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
 
         }
 
@@ -286,11 +264,11 @@ public class SyncPrimitive implements Watcher {
 
             }
         }
-        try{
+        try {
             b.leave();
-        } catch (KeeperException e){
+        } catch (KeeperException e) {
 
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
 
         }
         System.out.println("Left barrier");
