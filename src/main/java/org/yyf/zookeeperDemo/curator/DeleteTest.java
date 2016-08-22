@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class DeleteTest {
     public static void main(String[] args) throws InterruptedException {
         String connectionString = BaseConstants.zookeeperConnectionString;
-        ExponentialBackoffRetry exponentialBackoffRetry = new ExponentialBackoffRetry(3 * 1000, 3);
+        ExponentialBackoffRetry exponentialBackoffRetry = new ExponentialBackoffRetry(1000, 3);
         CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient(connectionString, exponentialBackoffRetry);
         curatorFramework.start();
 
