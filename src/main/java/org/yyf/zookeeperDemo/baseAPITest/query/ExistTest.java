@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by tobi on 16-8-19.
- *比较违反直接的是exist这个api会监听createNode，deleteNode，而且还有NodeDataChanged
+ *比较违反直觉的是exist这个api会监听createNode，deleteNode，而且还有NodeDataChanged
  */
 public class ExistTest implements Watcher {
     private static CountDownLatch countDownLatch = new CountDownLatch(1);
