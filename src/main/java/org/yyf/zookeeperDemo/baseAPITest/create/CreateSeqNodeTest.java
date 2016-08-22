@@ -23,7 +23,7 @@ public class CreateSeqNodeTest implements Watcher {
 
         try {
 //            String s = zooKeeper.create("/createPERSISTENTNodeTest", "haha".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-            String s1 = zooKeeper.create("/createEPHEMERALNodeTest", "haha1".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+            String s1 = zooKeeper.create("/createEPHEMERALNodeTest", "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 //            String s2 = zooKeeper.create("/testC", "haha2".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             String s3 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
             System.out.println(s3);
