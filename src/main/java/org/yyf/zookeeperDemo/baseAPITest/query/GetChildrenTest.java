@@ -16,12 +16,15 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Created by tobi on 16-8-19.
  * 注意getChildren watch的是子节点的添加或者删除，并不包括子节点的数据变化！！！
+ * 比较贴心的是Curator的PathChildCache可以监听子节点数据变化
+ *
+ * 但是他们都对次级child变化无反应，也就是监控最多只能一层child，再多不行
  */
 public class GetChildrenTest implements Watcher {
     private static CountDownLatch countDownLatch = new CountDownLatch(1);
     private static Stat stat=new Stat();
     private static ZooKeeper zooKeeper;
-    private static String path="/getChildrenNode";;
+    private static String path="/getChildrenNodeBase";;
     public static void main(String[] args) throws IOException, InterruptedException, KeeperException {
         zooKeeper = new ZooKeeper("localhost:2181", 6000, new CommonZKWatcher(countDownLatch));
         countDownLatch.await();
