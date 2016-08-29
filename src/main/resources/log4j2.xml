@@ -10,64 +10,19 @@
                 <!--<pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</pattern>-->
             </PatternLayout>
         </Console>
-        <RollingFile name="common-error" fileName="${pathName}/common-error.log"
-                     filePattern="${pathName}/common-error.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
-        <RollingFile name="biz-info" fileName="${pathName}/biz-info.log"
-                     filePattern="${pathName}/biz-info.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%X{UUID} %d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
-
-        <RollingFile name="DAL-DIGEST-APPENDER" fileName="${pathName}/perf-digest.log"
-                     filePattern="${pathName}/dal-perf-digest.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
-        <RollingFile name="BD-PERF" fileName="${pathName}/bd-perf.log"
-                     filePattern="${pathName}/bd-perf.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
-        <RollingFile name="sql" fileName="${pathName}/sql.log"
-                     filePattern="${pathName}/sql.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
-        <RollingFile name="mail-info" fileName="${pathName}/mail-info.log"
-                     filePattern="${pathName}/mail-info.log.%d{yyyy-MM-dd}">
-            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</pattern>
-            </PatternLayout>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </RollingFile>
+        <!--<RollingFile name="common-error" fileName="${pathName}/common-error.log"-->
+                     <!--filePattern="${pathName}/common-error.log.%d{yyyy-MM-dd}">-->
+            <!--<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <!--<PatternLayout>-->
+                <!--<pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] %c{2} %m%n</pattern>-->
+            <!--</PatternLayout>-->
+            <!--<TimeBasedTriggeringPolicy interval="1" modulate="true"/>-->
+        <!--</RollingFile>-->
     </Appenders>
     <Loggers>
-        <Root level="trace" additivity="false">
+        <Root level="info" additivity="false">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="common-error"/>
         </Root>
-        <Logger name="mailLogger" level="debug" additivity="false">
-            <AppenderRef ref="mail-info"/>
-        </Logger>
         <!--<Logger name="org.yyf" level="info" additivity="false">-->
             <!--<AppenderRef ref="biz-info"/>-->
             <!--<AppenderRef ref="common-error"/>-->

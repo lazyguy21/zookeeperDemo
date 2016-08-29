@@ -23,14 +23,14 @@ public class CreateSeqNodeTest implements Watcher {
 
         try {
 //            String s = zooKeeper.create("/createPERSISTENTNodeTest", "haha".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-            String s1 = zooKeeper.create("/createEPHEMERALNodeTest", "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-//            String s2 = zooKeeper.create("/testC", "haha2".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-            String s3 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-            System.out.println(s3);
-            String s4 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-            System.out.println(s4);
-            String s5 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-            System.out.println(s5);
+            String s1 = zooKeeper.create("/createEPHEMERALNodeTest", "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.CONTAINER);
+////            String s2 = zooKeeper.create("/testC", "haha2".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+//            String s3 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+//            System.out.println(s3);
+//            String s4 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+//            System.out.println(s4);
+//            String s5 = zooKeeper.create("/testC", "haha3".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+//            System.out.println(s5);
 //            String s4 = zooKeeper.create("/createNodeTest", "haha4".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.CreateMode;
             TimeUnit.SECONDS.sleep(1000);
         } catch (KeeperException e) {
