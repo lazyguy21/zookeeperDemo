@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tobi on 16-8-22. 监听node节点的创建，删除，数据变更
+ * 可以监控子节点的数据变更。这比zk原生api强
  */
 public class NodeCacheTest {
     public static void main(String[] args) throws InterruptedException {
