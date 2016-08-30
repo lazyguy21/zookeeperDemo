@@ -7,6 +7,7 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.utils.CloseableUtils;
 import org.yyf.zookeeperDemo.curator.BaseConstants;
 
 import java.io.IOException;
@@ -43,11 +44,6 @@ public class NodeCacheTest {
         });
 
 
-        TimeUnit.HOURS.sleep(1);
-        try {
-            nodeCache.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CloseableUtils.closeQuietly(nodeCache);
     }
 }
