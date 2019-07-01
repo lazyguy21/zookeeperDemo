@@ -27,7 +27,6 @@ public class GetDataTest implements Watcher {
         zooKeeper = new ZooKeeper("localhost:2181", 6000, new CommonZKWatcher(countDownLatch));
         countDownLatch.await();
 
-
         zooKeeper.create(path, "whatever".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL,stat);
         System.out.println("init stat : "+stat);
 

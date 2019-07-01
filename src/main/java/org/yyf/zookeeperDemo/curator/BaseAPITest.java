@@ -21,6 +21,7 @@ public class BaseAPITest {
         CuratorFrameworkState state = client.getState();
         System.out.println(state);
         client.start();
+
         System.out.println(state);
         byte[] bytes = client.getData().forPath("/setDataNode");
         System.out.println(new String(bytes));

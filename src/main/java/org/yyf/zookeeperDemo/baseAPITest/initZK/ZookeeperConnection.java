@@ -24,6 +24,7 @@ public class ZookeeperConnection implements Watcher {
             countDownLatch.await();//等待连接好后的事件回调
             System.out.println(zooKeeper.getState());//此时zk的状态已经是connected了
             System.out.println(zooKeeper.getSessionTimeout());//设置1000的时候，服务器默认取为4000了。
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
